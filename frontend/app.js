@@ -1,9 +1,10 @@
 const API = "http://127.0.0.1:8000";
 
-async function sendChat() {
+// Ask AI
+async function askAI() {
 
-    const question =
-        document.getElementById("question").value;
+    const prompt =
+        document.getElementById("prompt").value;
 
     const response = await fetch(
         `${API}/chat`,
@@ -13,7 +14,7 @@ async function sendChat() {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                message: question
+                question: prompt
             })
         }
     );
@@ -21,13 +22,20 @@ async function sendChat() {
     const data = await response.json();
 
     document.getElementById("response").innerHTML =
-        data.response;
+        JSON.stringify(data, null, 2);
 }
 
+
+// Upload PDF
 async function uploadPDF() {
 
     const file =
         document.getElementById("pdfFile").files[0];
+
+    if (!file) {
+        alert("Select a PDF first");
+        return;
+    }
 
     const formData = new FormData();
 
@@ -43,5 +51,49 @@ async function uploadPDF() {
 
     const data = await response.json();
 
-    alert(data.message);
+    document.getElementById("uploadResult").innerHTML =
+        "✅ PDF uploaded successfully";
+}
+
+
+// Ask Uploaded Document
+async function askDocument() {
+
+    const question =
+        document.getElementById("documentQuestion").value;
+
+    const response = await fetch(
+        `${API}/ask-document`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                question: question
+            })
+        }
+    );
+
+    const data = await response.json();
+
+    document.getElementById("documentResponse").innerHTML =
+        data.answer;
+}
+
+
+// Generate Quiz
+async function generateQuiz() {
+
+    const response = await fetch(
+        `${API}/generate-quiz`,
+        {
+            method: "POST"
+        }
+    );
+
+    const data = await response.json();
+
+    document.getElementById("quizResult").innerHTML =
+        JSON.stringify(data, null, 2);
 }

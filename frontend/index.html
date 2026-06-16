@@ -1,76 +1,52 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Study Assistant</title>
-
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
 <div class="container">
 
-    <!-- Sidebar -->
     <div class="sidebar">
-
-        <h2>AI Study Assistant</h2>
+        <h2>🎓 AI Study Assistant</h2>
 
         <label>Provider</label>
-
         <select id="provider">
             <option>Ollama</option>
             <option>OpenAI</option>
         </select>
 
-        <label>API Key (BYOK)</label>
-
+        <label>API Key</label>
         <input
             type="password"
             id="apiKey"
-            placeholder="Enter OpenAI API Key"
+            placeholder="Enter API Key"
         >
-
     </div>
 
-    <!-- Main Content -->
     <div class="main">
 
         <h1>AI Study Assistant</h1>
 
-        <!-- AI Chat -->
-        <section>
-
+        <!-- Ask AI -->
+        <section class="card">
             <h2>Ask AI</h2>
 
             <textarea
                 id="prompt"
-                placeholder="Ask a question..."
+                placeholder="Ask anything..."
             ></textarea>
 
-            <button onclick="askAI()">
-                Ask AI
-            </button>
+            <button onclick="askAI()">Ask AI</button>
 
             <div id="response"></div>
-
         </section>
 
-        <hr>
-
         <!-- Upload PDF -->
-        <section>
-
+        <section class="card">
             <h2>Upload PDF</h2>
 
             <input
@@ -84,19 +60,15 @@
             </button>
 
             <div id="uploadResult"></div>
-
         </section>
 
-        <hr>
-
         <!-- Ask Document -->
-        <section>
-
+        <section class="card">
             <h2>Ask Uploaded Document</h2>
 
             <textarea
                 id="documentQuestion"
-                placeholder="Ask about your uploaded PDF..."
+                placeholder="Ask about the uploaded PDF..."
             ></textarea>
 
             <button onclick="askDocument()">
@@ -104,33 +76,20 @@
             </button>
 
             <div id="documentResponse"></div>
-
         </section>
 
-        <hr>
-
-        <!-- Quiz Generator -->
-        <section>
-
+        <!-- Generate Quiz -->
+        <section class="card">
             <h2>Generate Quiz</h2>
 
             <button onclick="generateQuiz()">
                 Generate Quiz
             </button>
 
-            <div
-    id="quizResult"
-    style="
-        white-space: pre-wrap;
-        line-height: 2;
-        margin-top: 15px;
-    "
-></div>
-
+            <div id="quizResult"></div>
         </section>
 
     </div>
-
 </div>
 
 <script src="app.js"></script>
