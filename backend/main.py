@@ -4,6 +4,7 @@ from fastapi import File
 from fastapi.middleware.cors import CORSMiddleware
 
 from pydantic import BaseModel
+from typing import Optional
 
 from ai_provider import AIProvider
 
@@ -35,7 +36,7 @@ app.add_middleware(
 class ChatRequest(BaseModel):
     provider: str
     prompt: str
-    api_key: str = ""
+    api_key: Optional[str] = None
 
 
 class QuestionRequest(BaseModel):
@@ -65,9 +66,27 @@ def chat(request: ChatRequest):
 
     if request.provider == "Ollama":
 
-        answer = AIProvider.ollama(
+        context = retrieve_context(
             request.prompt
         )
+
+        prompt = f"""
+You are an AI Study Assistant.
+
+Use only this document context:
+
+{context}
+
+Question:
+{request.prompt}
+
+Answer:
+"""
+
+        answer = AIProvider.ollama(
+            prompt
+        )
+
 
     elif request.provider == "OpenAI":
 
@@ -76,52 +95,15 @@ def chat(request: ChatRequest):
             request.api_key
         )
 
+
     else:
 
         answer = "Unsupported provider"
 
+
     return {
         "response": answer
     }
-
-
-# -----------------------------
-# Upload PDF
-# -----------------------------
-@app.post("/upload-pdf")
-async def upload_pdf(
-    file: UploadFile = File(...)
-):
-
-    file_path = f"uploads/{file.filename}"
-
-    with open(
-        file_path,
-        "wb"
-    ) as buffer:
-
-        buffer.write(
-            await file.read()
-        )
-
-    text = extract_text(
-        file_path
-    )
-
-    chunks = chunk_text(
-        text
-    )
-
-    store_chunks(
-        chunks
-    )
-
-    return {
-        "message":
-        f"{file.filename} indexed successfully"
-    }
-
-
 # -----------------------------
 # Ask Uploaded Documents
 # -----------------------------
