@@ -202,6 +202,9 @@ IMPORTANT:
 - Use only complete facts and sentences from the Context.
 - Create quiz questions ONLY from the Context.
 - One question per fact.
+- Generate EXACTLY 5 questions.
+- If fewer than 5 facts exist, repeat no facts.
+- Output Question 1 through Question 5.
 
 Context:
 {context}

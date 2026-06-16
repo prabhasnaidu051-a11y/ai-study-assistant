@@ -85,15 +85,24 @@ async function askDocument() {
 // Generate Quiz
 async function generateQuiz() {
 
+    const topic =
+        document.getElementById("quizTopic").value;
+
     const response = await fetch(
         `${API}/generate-quiz`,
         {
-            method: "POST"
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                topic: topic
+            })
         }
     );
 
     const data = await response.json();
 
     document.getElementById("quizResult").innerHTML =
-        JSON.stringify(data, null, 2);
+        data.quiz;
 }
