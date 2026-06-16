@@ -6,25 +6,30 @@ async function askAI() {
     const prompt =
         document.getElementById("prompt").value;
 
+
     const response = await fetch(
         `${API}/chat`,
         {
             method: "POST",
+
             headers: {
                 "Content-Type": "application/json"
             },
+
             body: JSON.stringify({
-                question: prompt
+                provider: "Ollama",
+                prompt: prompt
             })
         }
     );
 
+
     const data = await response.json();
+
 
     document.getElementById("response").innerHTML =
         JSON.stringify(data, null, 2);
 }
-
 
 // Upload PDF
 async function uploadPDF() {
