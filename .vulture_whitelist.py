@@ -1,5 +1,7 @@
-home = None
-chat = None
-upload_pdf = None
-ask_document = None
-generate_quiz = None
+# Vulture whitelist
+
+home = 1
+chat = 1
+upload_pdf = 1
+ask_document = 1
+generate_quiz = 1
