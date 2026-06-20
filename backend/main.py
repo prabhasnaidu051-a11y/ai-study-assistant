@@ -104,6 +104,21 @@ Answer:
     return {
         "response": answer
     }
+
+@app.post("/upload-pdf")
+async def upload_pdf(file: UploadFile = File(...)):
+
+    pdf_text = extract_text(file.file)
+
+    chunks = chunk_text(pdf_text)
+
+    store_chunks(chunks)
+
+    return {
+        "message": "PDF uploaded successfully",
+        "chunks": len(chunks)
+    }
+
 # -----------------------------
 # Ask Uploaded Documents
 # -----------------------------
