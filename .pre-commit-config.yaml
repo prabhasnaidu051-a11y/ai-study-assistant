@@ -30,3 +30,7 @@ repos:
             chroma_db/|
             .git/
           )
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.19.1
+    hooks:
+      - id: pyupgrade
