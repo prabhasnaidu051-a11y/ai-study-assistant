@@ -1,0 +1,9 @@
+[MASTER]
+ignore=venv
+
+[MESSAGES CONTROL]
+disable=missing-module-docstring,
+        missing-class-docstring,
+        missing-function-docstring,
+        wrong-import-order,
+        no-member

@@ -1,0 +1,11 @@
+[flake8]
+exclude =
+    venv,
+    backend/venv
+
+max-line-length = 120
+
+ignore =
+    E501,
+    E402,
+    F401

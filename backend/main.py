@@ -25,7 +25,7 @@ app = FastAPI(
 # -----------------------------
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -38,7 +38,7 @@ app.add_middleware(
 class ChatRequest(BaseModel):
     provider: str
     prompt: str
-    api_key: Optional[str] = None
+    api_key: str | None = None
 
 
 class QuestionRequest(BaseModel):
@@ -134,6 +134,8 @@ async def upload_pdf(file: UploadFile = File(...)):
 # -----------------------------
 # Ask Uploaded Documents
 # -----------------------------
+
+
 @app.post("/ask-document")
 def ask_document(
     request: QuestionRequest
