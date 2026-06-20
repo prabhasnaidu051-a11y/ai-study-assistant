@@ -1,22 +1,20 @@
-import chromadb
+from chromadb import PersistentClient
 
-client = chromadb.PersistentClient(
-    path="./chroma_db"
+client = PersistentClient(
+    path="chroma_db"
 )
 
 collection = client.get_or_create_collection(
-    name="study_notes"
+    name="study_documents"
 )
 
 
-def store_chunks(chunks):
-
-    ids = [
-        f"chunk_{i}"
-        for i in range(len(chunks))
-    ]
+def store_chunks(chunks: list[str]):
 
     collection.add(
-        ids=ids,
-        documents=chunks
+        documents=chunks,
+        ids=[
+            str(i)
+            for i in range(len(chunks))
+        ]
     )

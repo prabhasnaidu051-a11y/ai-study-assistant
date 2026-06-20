@@ -1,107 +1,202 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Study Assistant</title>
-    <link rel="stylesheet" href="style.css">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AI Study Assistant</title>
+
+<link rel="stylesheet" href="style.css">
+
 </head>
+
+
 <body>
+
 
 <div class="container">
 
-    <div class="sidebar">
-        <h2>🎓 AI Study Assistant</h2>
 
-        <label>Provider</label>
-        <select id="provider">
-            <option>Ollama</option>
-            <option>OpenAI</option>
-        </select>
+<div class="sidebar">
 
-        <label>API Key</label>
-        <input
-            type="password"
-            id="apiKey"
-            placeholder="Enter API Key"
-        >
-    </div>
+<h2>🎓 AI Study Assistant</h2>
 
-    <div class="main">
 
-        <h1>AI Study Assistant</h1>
+<label for="provider">Provider</label>
 
-        <!-- Ask AI -->
-        <section class="card">
-            <h2>Ask AI</h2>
+<select id="provider" name="provider">
 
-            <textarea
-                id="prompt"
-                placeholder="Ask anything..."
-            ></textarea>
+<option value="Ollama">Ollama</option>
+<option value="OpenAI">OpenAI</option>
 
-            <button onclick="askAI()">
-                Ask AI
-            </button>
+</select>
 
-            <div id="response"></div>
-        </section>
+<label>API Key</label>
 
-        <!-- Upload PDF -->
-        <section class="card">
-            <h2>Upload PDF</h2>
+<input
+type="password"
+id="apiKey"
+placeholder="Enter API Key"
+>
 
-            <input
-                type="file"
-                id="pdfFile"
-                accept=".pdf"
-            >
-
-            <button onclick="uploadPDF()">
-                Upload PDF
-            </button>
-
-            <div id="uploadResult"></div>
-        </section>
-
-        <!-- Ask Document -->
-        <section class="card">
-            <h2>Ask Uploaded Document</h2>
-
-            <textarea
-                id="documentQuestion"
-                placeholder="Ask about the uploaded PDF..."
-            ></textarea>
-
-            <button onclick="askDocument()">
-                Ask Document
-            </button>
-
-            <div id="documentResponse"></div>
-        </section>
-
-        <!-- Generate Quiz -->
-        <section class="card">
-            <h2>Generate Quiz</h2>
-
-            <input
-                type="text"
-                id="quizTopic"
-                placeholder="Enter topic (e.g. Momentum)"
-            >
-
-            <button onclick="generateQuiz()">
-                Generate Quiz
-            </button>
-
-            <div id="quizResult"></div>
-        </section>
-
-    </div>
 
 </div>
 
-<script src="app.js"></script>
+
+
+
+
+<div class="main">
+
+
+<h1>AI Study Assistant</h1>
+
+
+
+
+
+<section class="card">
+
+
+<h2>Ask AI</h2>
+
+
+<textarea id="prompt"
+placeholder="Ask anything...">
+</textarea>
+
+
+<button type="button" onclick="askAI()">
+
+Ask AI
+
+</button>
+
+
+<div id="response"></div>
+
+
+</section>
+
+
+
+
+
+
+
+<section class="card">
+
+
+<h2>Upload PDF</h2>
+
+
+<label for="pdfFile">Choose PDF File</label>
+
+<input
+    type="file"
+    id="pdfFile"
+    name="pdfFile"
+    accept="application/pdf"
+>
+
+
+<button
+id="uploadBtn"
+type="button">
+
+Upload PDF
+
+</button>
+
+
+<p id="uploadResult"></p>
+
+
+</section>
+
+
+
+
+
+
+
+<section class="card">
+
+
+<h2>Ask Uploaded Document</h2>
+
+
+<textarea
+id="documentQuestion"
+placeholder="Ask about PDF">
+</textarea>
+
+
+<button
+type="button"
+onclick="askDocument()">
+
+Ask Document
+
+</button>
+
+
+<div id="documentResponse"></div>
+
+
+</section>
+
+
+
+
+
+
+
+
+<section class="card">
+
+
+<h2>Generate Quiz</h2>
+
+
+<input
+type="text"
+id="quizTopic"
+placeholder="Enter topic">
+
+
+<button
+type="button"
+onclick="generateQuiz()">
+
+Generate Quiz
+
+</button>
+
+
+<div id="quizResult"></div>
+
+
+</section>
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<script src="./app.js"></script>
+
 
 </body>
+
 </html>

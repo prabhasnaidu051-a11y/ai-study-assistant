@@ -19,6 +19,7 @@ app = FastAPI(
     version="1.0.0"
 )
 
+
 # -----------------------------
 # CORS
 # -----------------------------
@@ -29,6 +30,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # -----------------------------
 # Request Models
@@ -52,7 +54,6 @@ class QuizRequest(BaseModel):
 # -----------------------------
 @app.get("/")
 def home():
-
     return {
         "message": "AI Study Assistant Backend Running"
     }
@@ -87,7 +88,6 @@ Answer:
             prompt
         )
 
-
     elif request.provider == "OpenAI":
 
         answer = AIProvider.openai(
@@ -95,20 +95,32 @@ Answer:
             request.api_key
         )
 
-
     else:
 
         answer = "Unsupported provider"
-
 
     return {
         "response": answer
     }
 
+
+# -----------------------------
+# Upload PDF
+# -----------------------------
 @app.post("/upload-pdf")
 async def upload_pdf(file: UploadFile = File(...)):
 
-    pdf_text = extract_text(file.file)
+    if file.filename is None:
+        return {
+            "message": "No filename provided"
+        }
+
+    file_path = f"uploads/{file.filename}"
+
+    with open(file_path, "wb") as buffer:
+        buffer.write(await file.read())
+
+    pdf_text = extract_text(file_path)
 
     chunks = chunk_text(pdf_text)
 
@@ -177,36 +189,13 @@ You are a quiz generator.
 IMPORTANT:
 - Use ONLY the text inside Context.
 - Use ONLY information from Context.
-- Do NOT use any outside knowledge.
-- Do NOT add chapter numbers unless they appear in Context.
-- Do NOT create examples.
-- Do NOT create scenarios.
+- Do NOT use outside knowledge.
 - Do NOT add explanations.
-- Do NOT infer anything.
-- Questions must be based only on sentences found in Context.
-- Questions must be formed directly from facts in Context.
-- Do NOT reword concepts.
-- Do NOT replace words (e.g. isolated system → closed system).
-- Use the same terminology as Context.
-- Every answer must appear exactly in the Context.
 - Answers must be copied exactly from Context.
-- Answers must be copied word-for-word from the Context.
-- Do not shorten answers.
-- Do not paraphrase answers.
-- Ignore incomplete words.
-- Ignore text fragments.
-- Ignore labels such as "Length:".
-- Use only complete facts and sentences from the Context.
-- Create quiz questions ONLY from the Context.
-- One question per fact.
 - Generate EXACTLY 5 questions.
-- If fewer than 5 facts exist, repeat no facts.
-- Output Question 1 through Question 5.
 
 Context:
 {context}
-
-Create questions directly from the Context.
 
 Format:
 

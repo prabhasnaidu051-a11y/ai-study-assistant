@@ -1,113 +1,290 @@
 const API = "http://127.0.0.1:8000";
 
-// Ask AI
-async function askAI() {
 
-    const prompt =
-        document.getElementById("prompt").value;
+console.log("APP JS LOADED");
 
 
-    const response = await fetch(
-        `${API}/chat`,
-        {
-            method: "POST",
 
-            headers: {
-                "Content-Type": "application/json"
-            },
+// ASK AI
 
-            body: JSON.stringify({
-                provider: "Ollama",
-                prompt: prompt
-            })
-        }
-    );
+async function askAI(){
 
 
-    const data = await response.json();
+const prompt =
+document.getElementById("prompt").value;
 
 
-    document.getElementById("response").innerHTML =
-        JSON.stringify(data, null, 2);
+
+const response = await fetch(
+
+`${API}/chat`,
+
+{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+provider:"Ollama",
+
+prompt:prompt
+
+})
+
 }
 
-// Upload PDF
-async function uploadPDF() {
+);
 
-    const file =
-        document.getElementById("pdfFile").files[0];
 
-    if (!file) {
-        alert("Select a PDF first");
-        return;
-    }
 
-    const formData = new FormData();
+const data =
+await response.json();
 
-    formData.append("file", file);
 
-    const response = await fetch(
-        `${API}/upload-pdf`,
-        {
-            method: "POST",
-            body: formData
-        }
-    );
 
-    const data = await response.json();
+document.getElementById("response").innerHTML =
+data.response;
 
-    document.getElementById("uploadResult").innerHTML =
-        "✅ PDF uploaded successfully";
+
 }
 
 
-// Ask Uploaded Document
-async function askDocument() {
 
-    const question =
-        document.getElementById("documentQuestion").value;
 
-    const response = await fetch(
-        `${API}/ask-document`,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                question: question
-            })
-        }
-    );
 
-    const data = await response.json();
 
-    document.getElementById("documentResponse").innerHTML =
-        data.answer;
+
+// UPLOAD PDF
+
+
+window.onload = function(){
+
+
+const button =
+document.getElementById("uploadBtn");
+
+
+
+button.onclick = async function(e){
+
+
+e.preventDefault();
+
+e.stopPropagation();
+
+
+
+console.log("UPLOAD BUTTON CLICKED");
+
+
+
+const file =
+document.getElementById("pdfFile").files[0];
+
+
+
+if(!file){
+
+
+alert("Select a PDF first");
+
+return;
+
+
 }
 
 
-// Generate Quiz
-async function generateQuiz() {
 
-    const topic =
-        document.getElementById("quizTopic").value;
+console.log(
+"Selected:",
+file.name
+);
 
-    const response = await fetch(
-        `${API}/generate-quiz`,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                topic: topic
-            })
-        }
-    );
 
-    const data = await response.json();
 
-    document.getElementById("quizResult").innerHTML =
-        data.quiz;
+const formData =
+new FormData();
+
+
+
+formData.append(
+"file",
+file
+);
+
+
+
+
+try{
+
+
+const response =
+await fetch(
+
+`${API}/upload-pdf`,
+
+{
+
+method:"POST",
+
+body:formData
+
+}
+
+);
+
+
+
+const data =
+await response.json();
+
+
+
+console.log(data);
+
+
+
+document.getElementById("uploadResult").innerHTML =
+
+"✅ " + data.message;
+
+
+
+}
+
+catch(error){
+
+
+console.log(error);
+
+
+
+document.getElementById("uploadResult").innerHTML =
+
+"❌ Upload failed";
+
+
+}
+
+
+};
+
+
+
+};
+
+
+
+
+
+
+
+
+// ASK DOCUMENT
+
+
+async function askDocument(){
+
+
+const question =
+document.getElementById("documentQuestion").value;
+
+
+
+const response =
+await fetch(
+
+`${API}/ask-document`,
+
+{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+
+body:JSON.stringify({
+
+question:question
+
+})
+
+}
+
+);
+
+
+
+const data =
+await response.json();
+
+
+
+document.getElementById("documentResponse").innerHTML =
+
+data.answer;
+
+
+}
+
+
+
+
+
+
+
+
+// QUIZ
+
+
+async function generateQuiz(){
+
+
+const topic =
+document.getElementById("quizTopic").value;
+
+
+
+const response =
+await fetch(
+
+`${API}/generate-quiz`,
+
+{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+
+body:JSON.stringify({
+
+topic:topic
+
+})
+
+}
+
+);
+
+
+
+const data =
+await response.json();
+
+
+
+document.getElementById("quizResult").innerHTML =
+
+data.quiz;
+
+
 }
