@@ -4,7 +4,6 @@ from fastapi import File
 from fastapi.middleware.cors import CORSMiddleware
 
 from pydantic import BaseModel
-from typing import Optional
 
 from ai_provider import AIProvider
 
