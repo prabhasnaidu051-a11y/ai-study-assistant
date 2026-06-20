@@ -4,6 +4,7 @@
   - type_check
   - test
   - coverage
+  - security
 
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
@@ -36,3 +37,9 @@ coverage:
   stage: coverage
   script:
     - pytest --cov=backend
+
+dependency_audit:
+  stage: security
+  script:
+    - pip install pip-audit
+    - pip-audit -r backend/requirements.txt
