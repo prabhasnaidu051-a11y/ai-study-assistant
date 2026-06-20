@@ -15,37 +15,38 @@ repos:
     rev: 1.9.4
     hooks:
       - id: bandit
-        args: ["--exclude", "backend/venv"]
-        files: ^backend/
+        args:
+          - -r
+          - backend
+        exclude: ^backend/venv/
+        pass_filenames: false
 
   - repo: https://github.com/Yelp/detect-secrets
     rev: v1.5.0
     hooks:
       - id: detect-secrets
-        files: ^(backend|frontend)/
-        exclude: |
-          (?x)^(
-            backend/venv/|
-            backend/uploads/|
-            chroma_db/|
-            .git/
-          )
+        exclude: ^(backend/venv/|backend/chroma_db/)
+
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.19.1
     hooks:
       - id: pyupgrade
-        exclude: ^\.vulture_whitelist\.py$
+
   - repo: https://github.com/pycqa/flake8
     rev: 7.2.0
     hooks:
       - id: flake8
+
   - repo: https://github.com/jendrikseipp/vulture
     rev: v2.14
     hooks:
       - id: vulture
         args:
           - backend
-          - --exclude
-          - backend/venv
-          - --ignore-names
-          - home,chat,upload_pdf,ask_document,generate_quiz
+
+  - repo: https://github.com/pylint-dev/pylint
+    rev: v3.3.7
+    hooks:
+      - id: pylint
+        args:
+          - backend

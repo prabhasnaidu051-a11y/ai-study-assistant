@@ -1,4 +1,4 @@
-# Vulture whitelist
+# pylint: disable=invalid-name
 
 home = 1
 chat = 1
