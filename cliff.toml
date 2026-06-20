@@ -1,0 +1,9 @@
+﻿[changelog]
+header = "# Changelog"
+
+[git]
+conventional_commits = true
+filter_unconventional = true
+
+[git.tag]
+pattern = "v[0-9]*"
