@@ -1,10 +1,14 @@
 repos:
 
-  # Ruff
+  # Ruff (Lint + Format)
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.11.0
     hooks:
       - id: ruff
+        args:
+          - --fix
+
+      - id: ruff-format
 
 
   # Vulture (only backend/main.py)
@@ -43,22 +47,21 @@ repos:
           - types-requests
 
 
-  # Bandit security
+ # Bandit Security
   - repo: https://github.com/PyCQA/bandit
-    rev: 1.7.5
+    rev: 1.8.3
     hooks:
-    - id: bandit
-      args:
-        - -r
-        - backend
-        - -x
-        - backend/venv
-      additional_dependencies:
-        - pbr
-      pass_filenames: false
+      - id: bandit
+        args:
+          - -r
+          - backend
+          - -x
+          - backend/venv
+        additional_dependencies:
+          - pbr
+        pass_filenames: false
 
-
-  # Basic checks
+  # Basic Checks
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
@@ -66,9 +69,11 @@ repos:
       - id: end-of-file-fixer
       - id: check-yaml
 
+
+  # Flake8
   - repo: https://github.com/pycqa/flake8
-    rev: 7.1.1
+    rev: 7.2.0
     hooks:
-    - id: flake8
-      args:
-        - --exclude=venv,.venv
+      - id: flake8
+        args:
+          - --exclude=venv,.venv

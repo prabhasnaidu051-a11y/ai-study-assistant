@@ -11,10 +11,7 @@ from rag.vector_store import store_chunks
 from rag.retrieval import retrieve_context
 
 
-app = FastAPI(
-    title="AI Study Assistant",
-    version="1.0.0"
-)
+app = FastAPI(title="AI Study Assistant", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -47,9 +44,7 @@ class QuizRequest(BaseModel):
 # -----------------------------
 @app.get("/")
 def home():
-    return {
-        "message": "AI Study Assistant Backend Running"
-    }
+    return {"message": "AI Study Assistant Backend Running"}
 
 
 # -----------------------------
@@ -57,12 +52,8 @@ def home():
 # -----------------------------
 @app.post("/chat")
 def chat(request: ChatRequest):
-
     if request.provider == "Ollama":
-
-        context = retrieve_context(
-            request.prompt
-        )
+        context = retrieve_context(request.prompt)
 
         prompt = f"""
 You are an AI Study Assistant.
@@ -77,24 +68,15 @@ Question:
 Answer:
 """
 
-        answer = AIProvider.ollama(
-            prompt
-        )
+        answer = AIProvider.ollama(prompt)
 
     elif request.provider == "OpenAI":
-
-        answer = AIProvider.openai(
-            request.prompt,
-            request.api_key
-        )
+        answer = AIProvider.openai(request.prompt, request.api_key)
 
     else:
-
         answer = "Unsupported provider"
 
-    return {
-        "response": answer
-    }
+    return {"response": answer}
 
 
 # -----------------------------
@@ -102,11 +84,8 @@ Answer:
 # -----------------------------
 @app.post("/upload-pdf")
 async def upload_pdf(file: UploadFile = File(...)):
-
     if file.filename is None:
-        return {
-            "message": "No filename provided"
-        }
+        return {"message": "No filename provided"}
 
     file_path = f"uploads/{file.filename}"
 
@@ -119,10 +98,8 @@ async def upload_pdf(file: UploadFile = File(...)):
 
     store_chunks(chunks)
 
-    return {
-        "message": "PDF uploaded successfully",
-        "chunks": len(chunks)
-    }
+    return {"message": "PDF uploaded successfully", "chunks": len(chunks)}
+
 
 # -----------------------------
 # Ask Uploaded Documents
@@ -130,13 +107,8 @@ async def upload_pdf(file: UploadFile = File(...)):
 
 
 @app.post("/ask-document")
-def ask_document(
-    request: QuestionRequest
-):
-
-    context = retrieve_context(
-        request.question
-    )
+def ask_document(request: QuestionRequest):
+    context = retrieve_context(request.question)
 
     prompt = f"""
 You are an AI Study Assistant.
@@ -157,26 +129,17 @@ Question:
 Answer:
 """
 
-    answer = AIProvider.ollama(
-        prompt
-    )
+    answer = AIProvider.ollama(prompt)
 
-    return {
-        "answer": answer
-    }
+    return {"answer": answer}
 
 
 # -----------------------------
 # Generate Quiz
 # -----------------------------
 @app.post("/generate-quiz")
-def generate_quiz(
-    request: QuizRequest
-):
-
-    context = retrieve_context(
-        request.topic
-    )
+def generate_quiz(request: QuizRequest):
+    context = retrieve_context(request.topic)
 
     prompt = f"""
 You are a quiz generator.
@@ -210,13 +173,9 @@ Question 5:
 Answer:
 """
 
-    quiz = AIProvider.ollama(
-        prompt
-    )
+    quiz = AIProvider.ollama(prompt)
 
     print("CONTEXT:", context)
     print("QUIZ RESPONSE:", quiz)
 
-    return {
-        "quiz": quiz
-    }
+    return {"quiz": quiz}
