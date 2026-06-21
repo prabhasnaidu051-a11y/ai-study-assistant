@@ -83,3 +83,12 @@ repos:
     rev: v8.24.2
     hooks:
       - id: gitleaks
+
+    # Pyupgrade Python Modernization
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.19.1
+    hooks:
+      - id: pyupgrade
+        language_version: python3.13
+        args:
+          - --py313-plus
