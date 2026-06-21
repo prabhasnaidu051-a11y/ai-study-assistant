@@ -4,3 +4,5 @@ target-version = "py311"
 
 [tool.mypy]
 ignore_missing_imports = true
+
+exclude = "venv|backend/venv"

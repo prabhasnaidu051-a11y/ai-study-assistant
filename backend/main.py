@@ -1,6 +1,4 @@
-from fastapi import FastAPI
-from fastapi import UploadFile
-from fastapi import File
+from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 
 from pydantic import BaseModel
@@ -18,13 +16,9 @@ app = FastAPI(
     version="1.0.0"
 )
 
-
-# -----------------------------
-# CORS
-# -----------------------------
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
