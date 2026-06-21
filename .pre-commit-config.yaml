@@ -77,3 +77,9 @@ repos:
       - id: flake8
         args:
           - --exclude=venv,.venv
+
+    # Secret Scanning
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.24.2
+    hooks:
+      - id: gitleaks
