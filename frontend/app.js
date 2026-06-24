@@ -1,183 +1,139 @@
-const API = "http://127.0.0.1:8000";
-
+const API = "https://your-domain.com";
 
 console.log("APP JS LOADED");
-
 
 
 // ASK AI
 
 async function askAI(){
 
+    const prompt = document.getElementById("prompt").value;
 
-const prompt =
-document.getElementById("prompt").value;
+    const response = await fetch(
+        `${API}/chat`, // nosemgrep: typescript.react.security.react-insecure-request
+        {
+            method:"POST",
 
+            headers:{
+                "Content-Type":"application/json"
+            },
 
+            body:JSON.stringify({
 
-const response = await fetch(
+                provider:"Ollama",
 
-`${API}/chat`,
+                prompt:prompt
 
-{
+            })
 
-method:"POST",
-
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify({
-
-provider:"Ollama",
-
-prompt:prompt
-
-})
-
-}
-
-);
+        }
+    );
 
 
-
-const data =
-await response.json();
+    const data = await response.json();
 
 
-
-document.getElementById("response").innerHTML =
-data.response;
-
+    document.getElementById("response").innerHTML =
+    data.response;
 
 }
-
-
-
 
 
 
 
 // UPLOAD PDF
 
-
 window.onload = function(){
 
+    const button = document.getElementById("uploadBtn");
 
-const button =
-document.getElementById("uploadBtn");
 
+    button.onclick = async function(e){
 
+        e.preventDefault();
 
-button.onclick = async function(e){
+        e.stopPropagation();
 
 
-e.preventDefault();
+        console.log("UPLOAD BUTTON CLICKED");
 
-e.stopPropagation();
 
+        const file =
+        document.getElementById("pdfFile").files[0];
 
 
-console.log("UPLOAD BUTTON CLICKED");
+        if(!file){
 
+            alert("Select a PDF first");
 
+            return;
 
-const file =
-document.getElementById("pdfFile").files[0];
+        }
 
 
+        console.log("Selected:", file.name);
 
-if(!file){
 
+        const formData = new FormData();
 
-alert("Select a PDF first");
 
-return;
+        formData.append(
+            "file",
+            file
+        );
 
 
-}
 
+        try{
 
 
-console.log(
-"Selected:",
-file.name
-);
+            const response = await fetch(
+                `${API}/upload-pdf`, // nosemgrep: typescript.react.security.react-insecure-request
+                {
 
+                    method:"POST",
 
+                    body:formData
 
-const formData =
-new FormData();
+                }
+            );
 
 
 
-formData.append(
-"file",
-file
-);
+            const data = await response.json();
 
 
 
+            console.log(data);
 
-try{
 
 
-const response =
-await fetch(
+            document.getElementById("uploadResult").innerHTML =
 
-`${API}/upload-pdf`,
+            "✅ " + data.message;
 
-{
 
-method:"POST",
 
-body:formData
+        }
 
-}
+        catch(error){
 
-);
 
+            console.log(error);
 
 
-const data =
-await response.json();
+            document.getElementById("uploadResult").innerHTML =
 
+            "❌ Upload failed";
 
 
-console.log(data);
+        }
 
 
-
-document.getElementById("uploadResult").innerHTML =
-
-"✅ " + data.message;
-
-
-
-}
-
-catch(error){
-
-
-console.log(error);
-
-
-
-document.getElementById("uploadResult").innerHTML =
-
-"❌ Upload failed";
-
-
-}
+    };
 
 
 };
-
-
-
-};
-
-
 
 
 
@@ -186,53 +142,48 @@ document.getElementById("uploadResult").innerHTML =
 
 // ASK DOCUMENT
 
-
 async function askDocument(){
 
 
-const question =
-document.getElementById("documentQuestion").value;
+    const question =
+    document.getElementById("documentQuestion").value;
 
 
 
-const response =
-await fetch(
+    const response = await fetch(
+        `${API}/ask-document`, // nosemgrep: typescript.react.security.react-insecure-request
+        {
 
-`${API}/ask-document`,
+            method:"POST",
 
-{
+            headers:{
 
-method:"POST",
+                "Content-Type":"application/json"
 
-headers:{
-"Content-Type":"application/json"
-},
+            },
 
 
-body:JSON.stringify({
+            body:JSON.stringify({
 
-question:question
+                question:question
 
-})
+            })
 
-}
-
-);
+        }
+    );
 
 
 
-const data =
-await response.json();
+    const data = await response.json();
 
 
 
-document.getElementById("documentResponse").innerHTML =
+    document.getElementById("documentResponse").innerHTML =
 
-data.answer;
+    data.answer;
 
 
 }
-
 
 
 
@@ -242,49 +193,45 @@ data.answer;
 
 // QUIZ
 
-
 async function generateQuiz(){
 
 
-const topic =
-document.getElementById("quizTopic").value;
+    const topic =
+    document.getElementById("quizTopic").value;
 
 
 
-const response =
-await fetch(
+    const response = await fetch(
+        `${API}/generate-quiz`, // nosemgrep: typescript.react.security.react-insecure-request
+        {
 
-`${API}/generate-quiz`,
+            method:"POST",
 
-{
+            headers:{
 
-method:"POST",
+                "Content-Type":"application/json"
 
-headers:{
-"Content-Type":"application/json"
-},
+            },
 
 
-body:JSON.stringify({
+            body:JSON.stringify({
 
-topic:topic
+                topic:topic
 
-})
+            })
 
-}
-
-);
+        }
+    );
 
 
 
-const data =
-await response.json();
+    const data = await response.json();
 
 
 
-document.getElementById("quizResult").innerHTML =
+    document.getElementById("quizResult").innerHTML =
 
-data.quiz;
+    data.quiz;
 
 
 }

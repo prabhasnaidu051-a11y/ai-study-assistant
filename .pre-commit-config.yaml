@@ -89,6 +89,12 @@ repos:
     rev: v3.19.1
     hooks:
       - id: pyupgrade
-        language_version: python3.13
+        language_version: python3.14
         args:
           - --py313-plus
+
+  - repo: https://github.com/semgrep/semgrep
+    rev: v1.78.0
+    hooks:
+      - id: semgrep
+        stages: [manual]
