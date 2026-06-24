@@ -229,8 +229,7 @@ async function generateQuiz(){
 
 
 
-    document.getElementById("quizResult").innerHTML =
-
+   document.getElementById("quizResult").textContent =
     data.quiz;
 
 
