@@ -3,134 +3,162 @@ const API = "https://ai-study-assistant-ox51.onrender.com";
 console.log("APP JS LOADED");
 
 
+// -----------------------------
 // ASK AI
+// -----------------------------
 
 async function askAI(){
 
-    const prompt = document.getElementById("prompt").value;
-
-    const response = await fetch(
-        `${API}/chat`, // nosemgrep: typescript.react.security.react-insecure-request
-        {
-            method:"POST",
-
-            headers:{
-                "Content-Type":"application/json"
-            },
-
-            body:JSON.stringify({
-
-                provider:"Ollama",
-
-                prompt:prompt
-
-            })
-
-        }
-    );
+    const prompt =
+    document.getElementById("prompt").value;
 
 
-    const data = await response.json();
+    try {
+
+        const response = await fetch(
+            `${API}/chat`,
+            {
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json"
+                },
+
+                body:JSON.stringify({
+
+                    provider:"Ollama",
+
+                    prompt:prompt
+
+                })
+            }
+        );
 
 
-    document.getElementById("response").innerHTML =
-    data.response;
+        const data = await response.json();
+
+
+        document.getElementById("response").innerHTML =
+        data.response || "No response";
+
+
+    }
+
+    catch(error){
+
+        console.log(error);
+
+        document.getElementById("response").innerHTML =
+        "❌ AI request failed";
+
+    }
 
 }
 
 
 
 
+// -----------------------------
 // UPLOAD PDF
+// -----------------------------
 
 window.onload = function(){
 
-    const button = document.getElementById("uploadBtn");
+
+    const button =
+    document.getElementById("uploadBtn");
 
 
-    button.onclick = async function(e){
-
-        e.preventDefault();
-
-        e.stopPropagation();
+    if(button){
 
 
-        console.log("UPLOAD BUTTON CLICKED");
+        button.onclick = async function(e){
 
 
-        const file =
-        document.getElementById("pdfFile").files[0];
+            e.preventDefault();
 
 
-        if(!file){
-
-            alert("Select a PDF first");
-
-            return;
-
-        }
-
-
-        console.log("Selected:", file.name);
-
-
-        const formData = new FormData();
-
-
-        formData.append(
-            "file",
-            file
-        );
+            const file =
+            document.getElementById("pdfFile").files[0];
 
 
 
-        try{
+            if(!file){
+
+                alert("Select a PDF first");
+
+                return;
+
+            }
 
 
-            const response = await fetch(
-                `${API}/upload-pdf`, // nosemgrep: typescript.react.security.react-insecure-request
-                {
 
-                    method:"POST",
+            const formData =
+            new FormData();
 
-                    body:formData
 
-                }
+            formData.append(
+                "file",
+                file
             );
 
 
 
-            const data = await response.json();
+            try{
+
+
+                const response = await fetch(
+                    `${API}/upload-pdf`,
+                    {
+
+                        method:"POST",
+
+                        body:formData
+
+                    }
+                );
 
 
 
-            console.log(data);
+                const data =
+                await response.json();
 
 
 
-            document.getElementById("uploadResult").innerHTML =
-
-            "✅ " + data.message;
-
-
-
-        }
-
-        catch(error){
+                console.log(
+                    "UPLOAD:",
+                    data
+                );
 
 
-            console.log(error);
+
+                document.getElementById("uploadResult").innerHTML =
+
+                "✅ " + data.message;
 
 
-            document.getElementById("uploadResult").innerHTML =
 
-            "❌ Upload failed";
-
-
-        }
+            }
 
 
-    };
+            catch(error){
+
+
+                console.log(error);
+
+
+                document.getElementById("uploadResult").innerHTML =
+
+                "❌ Upload failed";
+
+
+            }
+
+
+        };
+
+
+    }
 
 
 };
@@ -139,8 +167,9 @@ window.onload = function(){
 
 
 
-
+// -----------------------------
 // ASK DOCUMENT
+// -----------------------------
 
 async function askDocument(){
 
@@ -150,37 +179,70 @@ async function askDocument(){
 
 
 
-    const response = await fetch(
-        `${API}/ask-document`, // nosemgrep: typescript.react.security.react-insecure-request
-        {
-
-            method:"POST",
-
-            headers:{
-
-                "Content-Type":"application/json"
-
-            },
+    try{
 
 
-            body:JSON.stringify({
+        const response = await fetch(
 
-                question:question
+            `${API}/ask-document`,
 
-            })
+            {
 
-        }
-    );
-
+                method:"POST",
 
 
-    const data = await response.json();
+                headers:{
+
+                    "Content-Type":"application/json"
+
+                },
+
+
+                body:JSON.stringify({
+
+                    question:question
+
+                })
+
+            }
+
+        );
 
 
 
-    document.getElementById("documentResponse").innerHTML =
+        const data =
+        await response.json();
 
-    data.answer;
+
+
+        console.log(
+            "ANSWER:",
+            data
+        );
+
+
+
+        document.getElementById("documentResponse").innerHTML =
+
+        data.answer || "No answer found";
+
+
+
+    }
+
+
+    catch(error){
+
+
+        console.log(error);
+
+
+        document.getElementById("documentResponse").innerHTML =
+
+        "❌ Question failed";
+
+
+    }
 
 
 }
@@ -189,9 +251,9 @@ async function askDocument(){
 
 
 
-
-
-// QUIZ
+// -----------------------------
+// GENERATE QUIZ
+// -----------------------------
 
 async function generateQuiz(){
 
@@ -201,36 +263,62 @@ async function generateQuiz(){
 
 
 
-    const response = await fetch(
-        `${API}/generate-quiz`, // nosemgrep: typescript.react.security.react-insecure-request
-        {
-
-            method:"POST",
-
-            headers:{
-
-                "Content-Type":"application/json"
-
-            },
+    try{
 
 
-            body:JSON.stringify({
+        const response = await fetch(
 
-                topic:topic
+            `${API}/generate-quiz`,
 
-            })
+            {
 
-        }
-    );
-
+                method:"POST",
 
 
-    const data = await response.json();
+                headers:{
+
+                    "Content-Type":"application/json"
+
+                },
+
+
+                body:JSON.stringify({
+
+                    topic:topic
+
+                })
+
+            }
+
+        );
 
 
 
-   document.getElementById("quizResult").textContent =
-    data.quiz;
+        const data =
+        await response.json();
+
+
+
+        document.getElementById("quizResult").textContent =
+
+        data.quiz || "No quiz generated";
+
+
+    }
+
+
+    catch(error){
+
+
+        console.log(error);
+
+
+        document.getElementById("quizResult").textContent =
+
+        "❌ Quiz failed";
+
+
+    }
 
 
 }
