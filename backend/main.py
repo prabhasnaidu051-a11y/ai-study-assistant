@@ -1,5 +1,8 @@
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+import os
 
 from pydantic import BaseModel
 
@@ -15,7 +18,7 @@ app = FastAPI(title="AI Study Assistant", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5500", "http://127.0.0.1:5500"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -42,10 +45,21 @@ class QuizRequest(BaseModel):
 # -----------------------------
 # Home
 # -----------------------------
+# Serve Frontend
+frontend_path = "../frontend"
+
+app.mount(
+    "/static",
+    StaticFiles(directory=frontend_path),
+    name="static"
+)
+
+
 @app.get("/")
 def home():
-    return {"message": "AI Study Assistant Backend Running"}
-
+    return FileResponse(
+        os.path.join(frontend_path, "index.html")
+    )
 
 # -----------------------------
 # AI Chat

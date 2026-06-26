@@ -6,7 +6,10 @@ COPY backend/requirements.txt .
 
 RUN pip install -r requirements.txt
 
-COPY backend .
+COPY backend ./backend
+COPY frontend ./frontend
+
+WORKDIR /app/backend
 
 EXPOSE 8000
 
