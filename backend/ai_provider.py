@@ -1,44 +1,48 @@
-import requests
 import os
+from groq import Groq
 
 
 class AIProvider:
 
     @staticmethod
-    def openai(prompt: str, api_key: str = None):
+    def groq(prompt: str):
 
-        key = api_key or os.getenv("OPENAI_API_KEY")
+        key = os.getenv("GROQ_API_KEY")
 
         if not key:
-            return "OpenAI API key missing"
+            return "GROQ API key missing"
 
-        response = requests.post(
-            "https://api.openai.com/v1/chat/completions",
-            headers={
-                "Authorization": f"Bearer {key}",
-                "Content-Type": "application/json"
-            },
-            json={
-                "model": "gpt-4o-mini",
-                "messages": [
-                    {
-                        "role": "user",
-                        "content": prompt
-                    }
-                ]
-            },
-            timeout=60
+        client = Groq(
+            api_key=key
         )
 
-        data = response.json()
+        response = client.chat.completions.create(
 
-        if "choices" in data:
-            return data["choices"][0]["message"]["content"]
+            model="llama-3.1-8b-instant",
 
-        return f"OpenAI Error: {data}"
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+
+            temperature=0.2
+        )
+
+
+        return response.choices[0].message.content
+
+
+
+    @staticmethod
+    def openai(prompt: str, api_key: str = None):
+
+        return "OpenAI disabled. Use Groq free API."
+
 
 
     @staticmethod
     def ollama(prompt: str):
 
-        return "Ollama is not available on Render deployment"
+        return "Ollama is not available on Render"

@@ -57,13 +57,10 @@ def health():
 @app.post("/chat")
 def chat(request: ChatRequest):
 
-    context = retrieve_context(
-        request.prompt
-    )
+    context = retrieve_context(request.prompt)
 
 
     prompt = f"""
-
 You are an AI Study Assistant.
 
 Use this context:
@@ -77,14 +74,10 @@ Question:
 
 
 Answer:
-
 """
 
 
-    answer = AIProvider.openai(
-        prompt,
-        os.getenv("OPENAI_API_KEY")
-    )
+    answer = AIProvider.groq(prompt)
 
 
     return {
@@ -115,19 +108,13 @@ async def upload_pdf(file: UploadFile = File(...)):
         )
 
 
-    pdf_text = extract_text(
-        file_path
-    )
+    pdf_text = extract_text(file_path)
 
 
-    chunks = chunk_text(
-        pdf_text
-    )
+    chunks = chunk_text(pdf_text)
 
 
-    store_chunks(
-        chunks
-    )
+    store_chunks(chunks)
 
 
     return {
@@ -155,7 +142,6 @@ def ask_document(request: QuestionRequest):
 
 You are an AI Study Assistant.
 
-
 Use ONLY this document context.
 
 
@@ -179,10 +165,7 @@ Answer:
 """
 
 
-    answer = AIProvider.openai(
-        prompt,
-        os.getenv("OPENAI_API_KEY")
-    )
+    answer = AIProvider.groq(prompt)
 
 
     return {
@@ -218,7 +201,6 @@ Context:
 
 Format:
 
-
 Question 1:
 Answer:
 
@@ -241,10 +223,7 @@ Answer:
 """
 
 
-    quiz = AIProvider.openai(
-        prompt,
-        os.getenv("OPENAI_API_KEY")
-    )
+    quiz = AIProvider.groq(prompt)
 
 
     return {
