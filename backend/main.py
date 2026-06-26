@@ -189,9 +189,14 @@ def generate_quiz(request: QuizRequest):
 
     prompt = f"""
 
-Create a quiz using ONLY this context.
+Create a quiz only from the uploaded document content.
 
-Generate exactly 5 questions.
+Rules:
+- Use ONLY the Context.
+- Do NOT use outside knowledge.
+- Every question must come from the Context.
+- Answers must be taken from the Context.
+- Generate exactly 5 questions.
 
 
 Context:
