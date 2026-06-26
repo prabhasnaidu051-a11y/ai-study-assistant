@@ -26,7 +26,7 @@ async function askAI(){
 
                 body:JSON.stringify({
 
-                    provider:"Ollama",
+                    provider:"OpenAI",
 
                     prompt:prompt
 
