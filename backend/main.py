@@ -1,10 +1,8 @@
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
-import os
-
 from pydantic import BaseModel
+import os
 
 from ai_provider import AIProvider
 
@@ -15,6 +13,7 @@ from rag.retrieval import retrieve_context
 
 
 app = FastAPI(title="AI Study Assistant", version="1.0.0")
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -28,6 +27,7 @@ app.add_middleware(
 # -----------------------------
 # Request Models
 # -----------------------------
+
 class ChatRequest(BaseModel):
     provider: str
     prompt: str
@@ -42,25 +42,26 @@ class QuizRequest(BaseModel):
     topic: str = "document"
 
 
-# -----------------------------
-# Home
-# -----------------------------
-# Serve Frontend
-frontend_path = "../frontend"
 
-app.mount(
-    "/",
-    StaticFiles(directory=frontend_path, html=True),
-    name="frontend"
-)
+# -----------------------------
+# Home API
+# -----------------------------
+
+@app.get("/health")
+def health():
+    return {"status": "AI Study Assistant Running"}
+
 
 
 # -----------------------------
 # AI Chat
 # -----------------------------
+
 @app.post("/chat")
 def chat(request: ChatRequest):
+
     if request.provider == "Ollama":
+
         context = retrieve_context(request.prompt)
 
         prompt = f"""
@@ -78,46 +79,81 @@ Answer:
 
         answer = AIProvider.ollama(prompt)
 
+
     elif request.provider == "OpenAI":
-        answer = AIProvider.openai(request.prompt, request.api_key)
+
+        answer = AIProvider.openai(
+            request.prompt,
+            request.api_key
+        )
+
 
     else:
         answer = "Unsupported provider"
 
-    return {"response": answer}
+
+    return {
+        "response": answer
+    }
+
 
 
 # -----------------------------
 # Upload PDF
 # -----------------------------
+
 @app.post("/upload-pdf")
 async def upload_pdf(file: UploadFile = File(...)):
-    if file.filename is None:
-        return {"message": "No filename provided"}
 
-    os.makedirs("uploads", exist_ok=True)
+    if file.filename is None:
+        return {
+            "message": "No filename provided"
+        }
+
+
+    os.makedirs(
+        "uploads",
+        exist_ok=True
+    )
+
 
     file_path = f"uploads/{file.filename}"
 
+
     with open(file_path, "wb") as buffer:
-        buffer.write(await file.read())
+
+        buffer.write(
+            await file.read()
+        )
+
+
     pdf_text = extract_text(file_path)
+
 
     chunks = chunk_text(pdf_text)
 
+
     store_chunks(chunks)
 
-    return {"message": "PDF uploaded successfully", "chunks": len(chunks)}
+
+    return {
+        "message": "PDF uploaded successfully",
+        "chunks": len(chunks)
+    }
+
 
 
 # -----------------------------
-# Ask Uploaded Documents
+# Ask Document
 # -----------------------------
-
 
 @app.post("/ask-document")
 def ask_document(request: QuestionRequest):
-    context = retrieve_context(request.question)
+
+    context = retrieve_context(
+        request.question
+    )
+
 
     prompt = f"""
 You are an AI Study Assistant.
@@ -138,31 +174,40 @@ Question:
 Answer:
 """
 
+
     answer = AIProvider.ollama(prompt)
 
-    return {"answer": answer}
+
+    return {
+        "answer": answer
+    }
+
 
 
 # -----------------------------
 # Generate Quiz
 # -----------------------------
+
 @app.post("/generate-quiz")
 def generate_quiz(request: QuizRequest):
-    context = retrieve_context(request.topic)
+
+    context = retrieve_context(
+        request.topic
+    )
+
 
     prompt = f"""
 You are a quiz generator.
 
 IMPORTANT:
 - Use ONLY the text inside Context.
-- Use ONLY information from Context.
 - Do NOT use outside knowledge.
-- Do NOT add explanations.
-- Answers must be copied exactly from Context.
 - Generate EXACTLY 5 questions.
 
 Context:
+
 {context}
+
 
 Format:
 
@@ -182,9 +227,28 @@ Question 5:
 Answer:
 """
 
+
     quiz = AIProvider.ollama(prompt)
 
-    print("CONTEXT:", context)
-    print("QUIZ RESPONSE:", quiz)
 
-    return {"quiz": quiz}
+    return {
+        "quiz": quiz
+    }
+
+
+
+# -----------------------------
+# Serve Frontend LAST
+# -----------------------------
+
+frontend_path = "../frontend"
+
+
+app.mount(
+    "/",
+    StaticFiles(
+        directory=frontend_path,
+        html=True
+    ),
+    name="frontend"
+)
