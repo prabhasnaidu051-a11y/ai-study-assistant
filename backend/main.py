@@ -56,11 +56,11 @@ app.mount(
 
 
 @app.get("/")
+@app.head("/")
 def home():
     return FileResponse(
         os.path.join(frontend_path, "index.html")
     )
-
 # -----------------------------
 # AI Chat
 # -----------------------------
