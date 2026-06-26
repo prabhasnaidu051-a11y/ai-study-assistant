@@ -49,18 +49,12 @@ class QuizRequest(BaseModel):
 frontend_path = "../frontend"
 
 app.mount(
-    "/static",
-    StaticFiles(directory=frontend_path),
-    name="static"
+    "/",
+    StaticFiles(directory=frontend_path, html=True),
+    name="frontend"
 )
 
 
-@app.get("/")
-@app.head("/")
-def home():
-    return FileResponse(
-        os.path.join(frontend_path, "index.html")
-    )
 # -----------------------------
 # AI Chat
 # -----------------------------
