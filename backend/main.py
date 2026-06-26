@@ -101,11 +101,12 @@ async def upload_pdf(file: UploadFile = File(...)):
     if file.filename is None:
         return {"message": "No filename provided"}
 
+    os.makedirs("uploads", exist_ok=True)
+
     file_path = f"uploads/{file.filename}"
 
     with open(file_path, "wb") as buffer:
         buffer.write(await file.read())
-
     pdf_text = extract_text(file_path)
 
     chunks = chunk_text(pdf_text)

@@ -1,4 +1,4 @@
-const API = "http://127.0.0.1:8000";
+const API = "https://ai-study-assistant-ox51.onrender.com";
 
 console.log("APP JS LOADED");
 
