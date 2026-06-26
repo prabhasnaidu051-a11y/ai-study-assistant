@@ -1,19 +1,55 @@
 # pylint: disable=too-few-public-methods
+
 import requests
 
 
 class AIProvider:
+
+
     @staticmethod
-    def ollama(prompt: str):
+    def openai(prompt: str, api_key: str):
+
         response = requests.post(
-            "http://localhost:11434/api/generate",
-            json={"model": "phi3", "prompt": prompt, "stream": False},
-            timeout=60,
+
+            "https://api.openai.com/v1/chat/completions",
+
+            headers={
+
+                "Authorization": f"Bearer {api_key}",
+
+                "Content-Type": "application/json"
+
+            },
+
+            json={
+
+                "model": "gpt-4o-mini",
+
+                "messages":[
+
+                    {
+
+                        "role":"user",
+
+                        "content":prompt
+
+                    }
+
+                ]
+
+            },
+
+            timeout=60
+
         )
+
 
         data = response.json()
 
-        if "response" in data:
-            return data["response"]
 
-        return f"Ollama Error: {data}"
+        if "choices" in data:
+
+            return data["choices"][0]["message"]["content"]
+
+
+        return f"OpenAI Error: {data}"
